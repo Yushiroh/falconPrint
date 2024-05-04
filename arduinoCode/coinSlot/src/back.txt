@@ -1,0 +1,55 @@
+#include <Arduino.h>
+
+int coin = 2;
+int i = 0;
+int impulsCount = 0;
+int total_amount = 0;
+int previous_total = 0; 
+String amountString;
+void incomingImpuls();
+
+void setup() {
+  pinMode(coin, INPUT_PULLUP);
+  Serial.begin(9600);
+  attachInterrupt(0, incomingImpuls, FALLING);
+}
+
+void incomingImpuls() {
+  impulsCount = impulsCount + 1;
+  i = 0;
+}
+
+void loop() {
+  i = i + 1;
+
+  if (i >= 30 && impulsCount == 1) {
+    total_amount = total_amount + 1;
+    impulsCount = 0;
+  }
+  if (i >= 30 && impulsCount == 5) {
+    total_amount = total_amount + 5;
+    impulsCount = 0;
+  }
+  if (i >= 30 && impulsCount == 10) {
+    total_amount = total_amount + 10;
+    impulsCount = 0;
+  }
+
+ 
+  if (total_amount != previous_total) {
+
+    amountString = String(total_amount);
+    previous_total = total_amount;
+  }else{
+
+    if(amountString.length() == 1){
+        Serial.print(amountString);
+    }else{
+        Serial.print(amountString); 
+    }
+
+  }
+
+
+
+}
